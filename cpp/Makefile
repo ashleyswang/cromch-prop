@@ -8,10 +8,10 @@ EXE := propagate_flags
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-CXXFLAGS := --std=c++11 -Iinclude -MMD -MP
+CXXFLAGS := --std=c++11 -Iinclude -I/usr/local/include -MMD -MP
 CFLAGS   := -Wall
 LDFLAGS  := -Llib
-LDLIBS   := -lm
+LDLIBS   := -lm -lpthread -lgraphblas -llagraph -llagraphx
 
 .PHONY: all clean
 

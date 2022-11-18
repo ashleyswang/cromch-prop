@@ -19,4 +19,9 @@ class MultithreadPropagate : public PropagateFlags {
     void propagate_flags(IFTGraph& G);
 };
 
+class GraphBlasBFS : public PropagateFlags {
+  public: 
+    void propagate_flags(IFTGraph& G);
+};
+
 #endif  // PROPAGATE_FLAGS_H

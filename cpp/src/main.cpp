@@ -98,6 +98,7 @@ int main (int argc, char *argv[]) {
 	std::string propagate_method = argv[2];
 	if (propagate_method == "iter") propagate = new IterativePropagate();
 	if (propagate_method == "multi") propagate = new MultithreadPropagate();
+	if (propagate_method == "bfs") propagate = new GraphBlasBFS();
 
 	// Create graph object
 	IFTGraph G = read_graph(argv[1]);
