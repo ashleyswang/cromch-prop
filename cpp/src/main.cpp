@@ -110,7 +110,7 @@ int main (int argc, char *argv[]) {
 	std::cout << "Propagation time: " << ms_double.count() << " ms" << std::endl;
  
 	// Output to .dot file
-	output_graph(G, argv[1], argv[2]);
+	// output_graph(G, argv[1], argv[2]);
 	delete propagate;
   return 0;
 }
