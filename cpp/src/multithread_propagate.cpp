@@ -2,9 +2,8 @@
 
 #include <cmath>
 #include <deque>
-
-#include <thread>
 #include <mutex>
+#include <thread>
 #include <vector>
 
 #define NUM_THREADS 10
