@@ -5,7 +5,7 @@ def read_graph(input_file, output_file):
   nodes = [x.split() for x in data if len(x.split()) == 3]
   edges = [x.split(" -> ") for x in data if len(x.split()) == 5]
 
-  node_out = open(output_file + "nodes.txt", "a")
+  node_out = open(output_file + "nodes.txt", "w")
 
   node_id = 0
   node_dict = {}
@@ -20,7 +20,7 @@ def read_graph(input_file, output_file):
       node_id += 1
   node_out.close()
 
-  edge_out = open(output_file + "edges.txt", "a")
+  edge_out = open(output_file + "edges.txt", "w")
   edge_arr = []
   for edge in edges:
     src, dst = edge

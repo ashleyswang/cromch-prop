@@ -1,32 +1,73 @@
+import argparse
 import networkx as nx
-import sys
+import timeit
+from ift import IFTGraph
+from nx_bfs import bfs_multi
 
 def read_graph(benchmark):
-  G = nx.DiGraph()
+  G = IFTGraph()
 
   node_data = open(f"../benchmarks/{benchmark}/nodes.txt", 'r').readlines()
-  node_arr = []
   for line in node_data: 
     idx, commit_id, node_str, nondeterministic = line.split(',')
-    node_arr.append((idx, {
-        "commit_id" : commit_id, 
-        "node_str" : node_str, 
-        "nondeterministic" : bool(nondeterministic)
-      }))
-  G.add_nodes_from(node_arr)
+    G.nodes.append(IFTGraph.IFTNode(int(idx), 
+                                    int(commit_id), 
+                                    node_str, 
+                                    bool(int(nondeterministic))))
 
   edge_data = open(f"../benchmarks/{benchmark}/edges.txt", 'r').readlines()
   for line in edge_data:
     src, dst = [int(i) for i in line.split(',')]
-    G.add_edge(src, dst)
+    G.edges.append(IFTGraph.IFTEdge(src, dst))
 
   return G
 
+def output_graph(G : IFTGraph, benchmark):
+  ofs = open(f"../benchmarks/{benchmark}/{benchmark}_nx.dot", "w")
+  ofs.write("digraph {\n")
   
+  for node in G.nodes:
+    node_str = f"#{node.commit_id} {node.node_str}"
+    color = "#ef9148" if node.nondeterministic else "#1ABA8B"
+    ofs.write(f'"{node_str}" [ color = "{color}", shape = "box", label = "{node_str}" ];\n')
+
+  for edge in G.edges:
+    src = G.nodes[edge.src]
+    dst = G.nodes[edge.dst]
+    ofs.write(f'"#{src.commit_id} {src.node_str}" -> "#{dst.commit_id} {dst.node_str}" ;\n')
+
+  ofs.write("}\n")
+  ofs.close()
+
+
+def to_nxgraph(ift_graph):
+  G = nx.DiGraph()
+  G.add_nodes_from([i for i in range(len(ift_graph.nodes))])
+  G.add_edges_from(G.edges)
+  return G
+
+def propagate_flags(G): 
+  nx_graph = to_nxgraph(G)
+  nd_nodes = G.get_nondeterministic_nodes()
+
+  prop_nodes = bfs_multi(nx_graph, nd_nodes)
+  for nidx in prop_nodes:
+    G.nodes[nidx].nondeterministic = True
 
 if __name__ == "__main__":
-  if (len(sys.argv) < 2):
-    print("USAGE: python3 networkx_propagate.py <benchmark>")
-    exit()
-  
-  G = read_graph(sys.argv[1])
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--graph", default="vsra")
+  # parser.add_argument("--method", default="bfs_mod")
+  parser.add_argument("--iter", default=1, type=int)
+  parser.add_argument("--output", default=False)
+  args = parser.parse_args()
+
+  G = read_graph(args.graph)
+
+  if (args.output):
+    propagate_flags(G)
+    output_graph(G, args.graph)
+  else: 
+    times = timeit.repeat(lambda: propagate_flags(G), number=1, repeat=args.iter)
+    for t in times:
+      print(t*1000)
