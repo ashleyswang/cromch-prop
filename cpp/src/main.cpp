@@ -41,7 +41,7 @@ IFTGraph read_graph(std::string graph) {
 		G.nodes.push_back(node);
 	}
 	ifs.close();
-	std::cout << graph << " num nodes: " << G.nodes.size() << std::endl;
+	// std::cout << graph << " num nodes: " << G.nodes.size() << std::endl;
 
 	/* Parse edges */
 	G.child_map.resize(G.nodes.size());
@@ -61,7 +61,7 @@ IFTGraph read_graph(std::string graph) {
 		G.child_map[edge.src].push_back(edge.dst);
 	}
 	ifs.close();
-	std::cout << graph << " num edges: " << G.edges.size() << std::endl;
+	// std::cout << graph << " num edges: " << G.edges.size() << std::endl;
 	return G;
 }
 
@@ -91,8 +91,10 @@ int main (int argc, char *argv[]) {
 	PropagateFlags* propagate = nullptr;
 
 	if (argc < 3) {
-		std::cerr << "USAGE: ./propagate_flags <graph_dir> <propagate_method>" << std::endl;
+		std::cerr << "USAGE: ./propagate_flags <graph_dir> <propagate_method> <num_iter>" << std::endl;
 	}
+
+	int num_iter = (argc == 4) ? std::stoi(argv[3]) : 1;
 
 	// Choose propagate method
 	std::string propagate_method = argv[2];
@@ -101,17 +103,23 @@ int main (int argc, char *argv[]) {
 	if (propagate_method == "bfs") propagate = new GraphBlasBFS();
 
 	// Create graph object
-	IFTGraph G = read_graph(argv[1]);
+	IFTGraph graph = read_graph(argv[1]);
 
 	// Propagation
-	auto start = std::chrono::high_resolution_clock::now();
-	propagate->propagate_flags(G);
-	auto stop = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> ms_double = stop - start;
-	std::cout << "Propagation time: " << ms_double.count() << " ms" << std::endl;
+	for (int i = 0; i < num_iter; ++i) {
+		IFTGraph G = graph;
+		// IFTGraph G = read_graph(argv[1]);
+		auto start = std::chrono::high_resolution_clock::now();
+		propagate->propagate_flags(G);
+		auto stop = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double, std::milli> ms_double = stop - start;
+		// std::cout << "Propagation time: " << ms_double.count() << " ms" << std::endl;
+		std::cout << ms_double.count() << std::endl;
+	}
  
 	// Output to .dot file
-	// output_graph(G, argv[1], argv[2]);
+	propagate->propagate_flags(graph);
+	output_graph(graph, argv[1], argv[2]);
 	delete propagate;
   return 0;
 }

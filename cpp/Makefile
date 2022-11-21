@@ -11,7 +11,8 @@ OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 CXXFLAGS := --std=c++11 -Iinclude -I/usr/local/include -MMD -MP
 CFLAGS   := -Wall
 LDFLAGS  := -Llib
-LDLIBS   := -lm -lpthread -lgraphblas -llagraph -llagraphx
+LDLIBS   := -lm -lpthread
+# LDLIBS   := -lm -lpthread -lgraphblas -llagraph -llagraphx
 
 .PHONY: all clean
 

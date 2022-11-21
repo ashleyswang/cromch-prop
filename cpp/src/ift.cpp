@@ -1,7 +1,8 @@
 #include "ift.h"
 
 namespace {
-  int binary_search_index(const std::vector<IFTGraph::IFTEdge>& v, int target, int start_idx, int end_idx) {
+  int binary_search_index(const std::vector<IFTGraph::IFTEdge>& v, 
+                          int target, size_t start_idx, size_t end_idx) {
     // exhausted binary search
     if (start_idx == end_idx) 
       return target == v[end_idx].src ? end_idx : -1;
@@ -25,7 +26,7 @@ std::vector<int> IFTGraph::get_children(int node_idx) {
   int test_idx = binary_search_index(edges, node_idx);
   if (test_idx < 0) return v;
 
-  int curr_idx = test_idx;
+  size_t curr_idx = test_idx;
   while (edges[curr_idx].src == node_idx) {
     v.push_back(edges[curr_idx].dst);
     curr_idx--;

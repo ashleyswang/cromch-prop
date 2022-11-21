@@ -6,7 +6,7 @@
 namespace {
   std::deque<int> get_nondeterministic_nodes(const IFTGraph& G) {
     std::deque<int> v;
-    for (int i = 0; i < G.nodes.size(); ++i) {
+    for (size_t i = 0; i < G.nodes.size(); ++i) {
       if (G.nodes[i].nondeterministic) v.push_back(i);
     }
     return v;

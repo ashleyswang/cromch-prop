@@ -1,21 +1,21 @@
 #include "propagate_flags.h"
 
-#include "GraphBLAS.h"
-#include "LAGraph.h"
-#include "LAGraphX.h"
+// #include "GraphBLAS.h"
+// #include "LAGraph.h"
+// #include "LAGraphX.h"
 
 void GraphBlasBFS::propagate_flags(IFTGraph& G) {
-  // make adjacency matrix
-  GrB_Matrix adj_matrix;
-  GrB_Matrix_new(&adj_matrix, GrB_BOOL, G.nodes.size(), G.nodes.size());
-  for (auto& edge : G.edges) {
-    GrB_Matrix_setElement_BOOL(adj_matrix, true, edge.src, edge.dst);
-  }
+//   // make adjacency matrix
+//   GrB_Matrix adj_matrix;
+//   GrB_Matrix_new(&adj_matrix, GrB_BOOL, G.nodes.size(), G.nodes.size());
+//   for (auto& edge : G.edges) {
+//     GrB_Matrix_setElement_BOOL(adj_matrix, true, edge.src, edge.dst);
+//   }
 
-  // make graph
-  char* error;
-  LAGraph_Graph la_graph;
-  LAGraph_New(&la_graph, &adj_matrix, LAGraph_ADJACENCY_DIRECTED, error);
+//   // make graph
+//   char* error;
+//   LAGraph_Graph la_graph;
+//   LAGraph_New(&la_graph, &adj_matrix, LAGraph_ADJACENCY_DIRECTED, error);
 }
   
 
