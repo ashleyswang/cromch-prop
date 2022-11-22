@@ -58,6 +58,8 @@ template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_
   next_frontier->dense_vertex_set_ = nextIndices;
   return next_frontier;
 } //end of edgeset apply function 
+extern void read_nd_nodes (string graph_name); 
+extern void read_nd_nodes (string graph_name); 
 struct ndFilter
 {
 bool operator() (NodeID v) 
@@ -86,25 +88,14 @@ bool operator() (NodeID v)
     return output;
   };
 };
-struct gt_setup
+struct gt_prop_flags
 {
 void operator() (string graph) 
   {
     edges = builtin_loadEdgesFromFile ( graph) ;
     (bool) 1;
     nondeterministic = new bool [ builtin_getVertices(edges) ];
-  };
-};
-#ifdef GEN_PYBIND_WRAPPERS
-//PyBind Wrappers for functiongt_setup
-void gt_setup__wrapper (string graph) { 
-  gt_setup()(graph);
-}
-#endif
-struct gt_prop_flags
-{
-void operator() () 
-  {
+    read_nd_nodes(graph) ;
     VertexSubset<int> *  frontier = builtin_const_vertexset_filter <ndFilter>(ndFilter(), builtin_getVertices(edges) );
     while ( (builtin_getVertexSetSize(frontier) ) != ((0) ))
     {
@@ -118,13 +109,12 @@ void operator() ()
 };
 #ifdef GEN_PYBIND_WRAPPERS
 //PyBind Wrappers for functiongt_prop_flags
-void gt_prop_flags__wrapper (void) { 
-  gt_prop_flags()();
+void gt_prop_flags__wrapper (string graph) { 
+  gt_prop_flags()(graph);
 }
 #endif
 #ifdef GEN_PYBIND_WRAPPERS
 PYBIND11_MODULE(, m) {
-m.def("gt_setup", &gt_setup__wrapper, "");
 m.def("gt_prop_flags", &gt_prop_flags__wrapper, "");
 }
 #endif
