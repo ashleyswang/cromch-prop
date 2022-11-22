@@ -131,6 +131,9 @@ int main(int argc, char * argv[])
     float time = (stopTimer()  * (1000) );
     std::cout << time<< std::endl;
   }
+  ligra::parallel_for_lambda((int)0, (int)builtin_getVertices(edges) , [&] (int vertexsetapply_iter) {
+    printNondeterminism()(vertexsetapply_iter);
+  });;
 };
 #ifdef GEN_PYBIND_WRAPPERS
 PYBIND11_MODULE(, m) {

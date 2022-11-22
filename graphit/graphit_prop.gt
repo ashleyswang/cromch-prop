@@ -50,5 +50,5 @@ func main()
     print time;
   end
 
-  % vertices.apply(printNondeterminism);
+  vertices.apply(printNondeterminism);
 end

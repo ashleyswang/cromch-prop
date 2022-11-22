@@ -4,6 +4,11 @@
 #include <fstream>
 #include <string>
 
+std::string edge_fname(std::string graph_name) {
+  std::string fname = "../benchmarks/" + graph_name + "/edges.el";
+  return fname;
+}
+
 void read_nd_nodes(std::string graph_name) {
   std::ifstream ifs;
 	ifs.open("../benchmarks/" + graph_name + "/nd_nodes.txt");
@@ -17,6 +22,10 @@ void read_nd_nodes(std::string graph_name) {
     nondeterministic[idx] = true;
 	}
 	ifs.close();
+}
+
+void GraphItPropagate::setup(IFTGraph& G) {
+  gt_setup() (G.graph);
 }
 
 void GraphItPropagate::propagate_flags(IFTGraph& G) {

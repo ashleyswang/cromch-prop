@@ -1,11 +1,12 @@
+extern func edge_fname(graph_name : string) -> output:string;
 extern func read_nd_nodes(graph_name : string);
 
 element Vertex end
 element Edge end
 
-const edges : edgeset{Edge}(Vertex,Vertex);
-const vertices : vertexset{Vertex};
-const nondeterministic : vector{Vertex}(bool);
+const edges : edgeset{Edge}(Vertex,Vertex) = load(edge_fname(argv[1]));
+const vertices : vertexset{Vertex} = edges.getVertices();
+const nondeterministic : vector{Vertex}(bool) = false;
 
 % filters nodes that are nondeterministic
 func ndFilter(v : Vertex) -> output : bool
@@ -22,12 +23,14 @@ func toFilter(v : Vertex) -> output : bool
   output = not nondeterministic[v];
 end
 
-export func gt_prop_flags(graph : string)
-  edges = load(graph);
-  vertices = edges.getVertices();
-  nondeterministic = new vector{Vertex}(bool)();
+export func gt_setup(graph : string) 
+  %edges = load(graph);
+  %vertices = edges.getVertices();
+  %nondeterministic = new vector{Vertex}(bool)();
   read_nd_nodes(graph);
+end
 
+export func gt_prop_flags(graph : string)
   var frontier : vertexset{Vertex} = vertices.filter(ndFilter);
 
   while (frontier.getVertexSetSize() != 0)

@@ -23,7 +23,7 @@ def read_graph(benchmark):
   return G
 
 def output_graph(G : IFTGraph, benchmark):
-  ofs = open(f"../benchmarks/{benchmark}/{benchmark}_nx.dot", "w")
+  ofs = open(f"../benchmarks/{benchmark}/graphs/{benchmark}_nx.dot", "w")
   ofs.write("digraph {\n")
   
   for node in G.nodes:
@@ -65,7 +65,10 @@ if __name__ == "__main__":
   if (args.output):
     G = read_graph(args.graph)
     propagate_flags(G)
-    output_graph(G, args.graph)
+    # output_graph(G, args.graph)
+    for node in G.nodes:
+      if node.nondeterministic:
+        print(node.idx)
   else: 
     for _ in range(args.iter):
       G = read_graph(args.graph)

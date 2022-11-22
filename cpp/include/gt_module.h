@@ -10,7 +10,7 @@ namespace py = pybind11;
 #endif
 Graph edges;
 bool  * __restrict nondeterministic;
-template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier1(Graph & g , VertexSubset<NodeID>* from_vertexset, TO_FUNC to_func, APPLY_FUNC apply_func) 
+template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier2(Graph & g , VertexSubset<NodeID>* from_vertexset, TO_FUNC to_func, APPLY_FUNC apply_func) 
 { 
     int64_t numVertices = g.num_nodes(), numEdges = g.num_edges();
     from_vertexset->toSparse();
@@ -58,7 +58,16 @@ template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_
   next_frontier->dense_vertex_set_ = nextIndices;
   return next_frontier;
 } //end of edgeset apply function 
+extern string edge_fname (string graph_name); 
 extern void read_nd_nodes (string graph_name); 
+struct nondeterministic_generated_vector_op_apply_func_0
+{
+void operator() (NodeID v) 
+  {
+    nondeterministic[v] = (bool) 0;
+  };
+};
+extern string edge_fname (string graph_name); 
 extern void read_nd_nodes (string graph_name); 
 struct ndFilter
 {
@@ -73,10 +82,10 @@ struct updateFlag
 {
 bool operator() (NodeID src, NodeID dst) 
   {
-    bool output0 ;
+    bool output1 ;
     nondeterministic[dst] = (bool) 1;
-    output0 = (bool) 1;
-    return output0;
+    output1 = (bool) 1;
+    return output1;
   };
 };
 struct toFilter
@@ -88,19 +97,28 @@ bool operator() (NodeID v)
     return output;
   };
 };
+struct gt_setup
+{
+void operator() (string graph) 
+  {
+    read_nd_nodes(graph) ;
+  };
+};
+#ifdef GEN_PYBIND_WRAPPERS
+//PyBind Wrappers for functiongt_setup
+void gt_setup__wrapper (string graph) { 
+  gt_setup()(graph);
+}
+#endif
 struct gt_prop_flags
 {
 void operator() (string graph) 
   {
-    edges = builtin_loadEdgesFromFile ( graph) ;
-    (bool) 1;
-    nondeterministic = new bool [ builtin_getVertices(edges) ];
-    read_nd_nodes(graph) ;
     VertexSubset<int> *  frontier = builtin_const_vertexset_filter <ndFilter>(ndFilter(), builtin_getVertices(edges) );
     while ( (builtin_getVertexSetSize(frontier) ) != ((0) ))
     {
       VertexSubset<int> *  output ;
-      output = edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier1(edges, frontier, toFilter(), updateFlag()); 
+      output = edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier2(edges, frontier, toFilter(), updateFlag()); 
       deleteObject(frontier) ;
       frontier = output;
     }
@@ -115,6 +133,7 @@ void gt_prop_flags__wrapper (string graph) {
 #endif
 #ifdef GEN_PYBIND_WRAPPERS
 PYBIND11_MODULE(, m) {
+m.def("gt_setup", &gt_setup__wrapper, "");
 m.def("gt_prop_flags", &gt_prop_flags__wrapper, "");
 }
 #endif
