@@ -20,5 +20,5 @@ void read_nd_nodes(std::string graph_name) {
 }
 
 void GraphItPropagate::propagate_flags(IFTGraph& G) {
-  gt_prop_flags() (G.graph);
+  gt_prop_flags() ("../benchmarks/" + G.graph + "/edges.el");
 }

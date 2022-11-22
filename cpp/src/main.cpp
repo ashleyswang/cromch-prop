@@ -109,7 +109,6 @@ int main (int argc, char *argv[]) {
 	// Propagation
 	for (int i = 0; i < num_iter; ++i) {
 		IFTGraph G = graph;
-		propagate->setup(graph);
 		auto start = std::chrono::high_resolution_clock::now();
 		propagate->propagate_flags(G);
 		auto stop = std::chrono::high_resolution_clock::now();
