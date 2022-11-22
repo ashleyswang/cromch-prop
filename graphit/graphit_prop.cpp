@@ -9,9 +9,8 @@
 namespace py = pybind11;
 #endif
 Graph edges;
-int  * __restrict parent;
 bool  * __restrict nondeterministic;
-template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier3(Graph & g , VertexSubset<NodeID>* from_vertexset, TO_FUNC to_func, APPLY_FUNC apply_func) 
+template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier2(Graph & g , VertexSubset<NodeID>* from_vertexset, TO_FUNC to_func, APPLY_FUNC apply_func) 
 { 
     int64_t numVertices = g.num_nodes(), numEdges = g.num_edges();
     from_vertexset->toSparse();
@@ -61,41 +60,15 @@ template <typename TO_FUNC , typename APPLY_FUNC> VertexSubset<NodeID>* edgeset_
 } //end of edgeset apply function 
 extern string edge_fname (string graph_name); 
 extern void read_nd_nodes (string graph_name); 
-struct nondeterministic_generated_vector_op_apply_func_1
+struct nondeterministic_generated_vector_op_apply_func_0
 {
 void operator() (NodeID v) 
   {
     nondeterministic[v] = (bool) 0;
   };
 };
-struct parent_generated_vector_op_apply_func_0
-{
-void operator() (NodeID v) 
-  {
-    parent[v] =  -(1) ;
-  };
-};
 extern string edge_fname (string graph_name); 
 extern void read_nd_nodes (string graph_name); 
-struct updateEdge
-{
-bool operator() (NodeID src, NodeID dst) 
-  {
-    bool output2 ;
-    parent[dst] = src;
-    output2 = (bool) 1;
-    return output2;
-  };
-};
-struct toFilter
-{
-bool operator() (NodeID v) 
-  {
-    bool output ;
-    output = (parent[v]) == ( -(1) );
-    return output;
-  };
-};
 struct ndFilter
 {
 bool operator() (NodeID v) 
@@ -105,7 +78,26 @@ bool operator() (NodeID v)
     return output;
   };
 };
-struct printParent
+struct updateFlag
+{
+bool operator() (NodeID src, NodeID dst) 
+  {
+    bool output1 ;
+    nondeterministic[dst] = (bool) 1;
+    output1 = (bool) 1;
+    return output1;
+  };
+};
+struct toFilter
+{
+bool operator() (NodeID v) 
+  {
+    bool output ;
+    output =  !(nondeterministic[v]);
+    return output;
+  };
+};
+struct printNondeterminism
 {
 void operator() (NodeID v) 
   {
@@ -118,27 +110,27 @@ void operator() (NodeID v)
 int main(int argc, char * argv[])
 {
   edges = builtin_loadEdgesFromFile ( edge_fname(argv_safe((1) , argv, argc)) ) ;
-  parent = new int [ builtin_getVertices(edges) ];
   nondeterministic = new bool [ builtin_getVertices(edges) ];
   ligra::parallel_for_lambda((int)0, (int)builtin_getVertices(edges) , [&] (int vertexsetapply_iter) {
-    parent_generated_vector_op_apply_func_0()(vertexsetapply_iter);
+    nondeterministic_generated_vector_op_apply_func_0()(vertexsetapply_iter);
   });;
-  ligra::parallel_for_lambda((int)0, (int)builtin_getVertices(edges) , [&] (int vertexsetapply_iter) {
-    nondeterministic_generated_vector_op_apply_func_1()(vertexsetapply_iter);
-  });;
-  read_nd_nodes(argv_safe((1) , argv, argc)) ;
-  VertexSubset<int> *  frontier = builtin_const_vertexset_filter <ndFilter>(ndFilter(), builtin_getVertices(edges) );
-  while ( (builtin_getVertexSetSize(frontier) ) != ((0) ))
+  int iter = atoi(argv_safe((2) , argv, argc)) ;
+  for ( int i = (0) ; i < iter; i++ )
   {
-    VertexSubset<int> *  output ;
-    output = edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier3(edges, frontier, toFilter(), updateEdge()); 
+    startTimer() ;
+    read_nd_nodes(argv_safe((1) , argv, argc)) ;
+    VertexSubset<int> *  frontier = builtin_const_vertexset_filter <ndFilter>(ndFilter(), builtin_getVertices(edges) );
+    while ( (builtin_getVertexSetSize(frontier) ) != ((0) ))
+    {
+      VertexSubset<int> *  output ;
+      output = edgeset_apply_push_serial_from_vertexset_to_filter_func_with_frontier2(edges, frontier, toFilter(), updateFlag()); 
+      deleteObject(frontier) ;
+      frontier = output;
+    }
     deleteObject(frontier) ;
-    frontier = output;
+    float time = (stopTimer()  * (1000) );
+    std::cout << time<< std::endl;
   }
-  deleteObject(frontier) ;
-  ligra::parallel_for_lambda((int)0, (int)builtin_getVertices(edges) , [&] (int vertexsetapply_iter) {
-    printParent()(vertexsetapply_iter);
-  });;
 };
 #ifdef GEN_PYBIND_WRAPPERS
 PYBIND11_MODULE(, m) {

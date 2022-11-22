@@ -26,7 +26,7 @@ struct IFTGraph {
   std::vector<IFTEdge> edges;
   std::vector<std::vector<int>> child_map;
 
-  std::vector<int> get_children(int node_idx);
+  std::string graph;
 };
 
 #endif  // IFT_GRAPH_H

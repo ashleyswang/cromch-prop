@@ -1,49 +1,54 @@
 extern func edge_fname(graph_name : string) -> output:string;
+extern func read_nd_nodes(graph_name : string);
 
 element Vertex end
 element Edge end
 
 const edges : edgeset{Edge}(Vertex,Vertex) = load(edge_fname(argv[1]));
-
 const vertices : vertexset{Vertex} = edges.getVertices();
-
-const parent : vector{Vertex}(int) = -1;
 const nondeterministic : vector{Vertex}(bool) = false;
 
-extern func read_nd_nodes(graph_name : string);
-
-func updateEdge(src : Vertex, dst : Vertex)
-  parent[dst] = src;
-end
-
-func toFilter(v : Vertex) -> output : bool
-  output =  parent[v] == -1;
-end
-
+% filters nodes that are nondeterministic
 func ndFilter(v : Vertex) -> output : bool
   output = nondeterministic[v];
 end
 
-func printParent(v: Vertex)
-  %if parent[v] > -1
-  %    print v;
-  %end
+% updates node to be nondeterministic
+func updateFlag(src : Vertex, dst : Vertex)
+  nondeterministic[dst] = true;
+end
+
+% filters nodes that are not nondeterministic
+func toFilter(v : Vertex) -> output : bool
+  output = not nondeterministic[v];
+end
+
+func printNondeterminism(v : Vertex)
   if nondeterministic[v]
     print v;
-  end
+  end 
 end
 
 func main()
-  read_nd_nodes(argv[1]);
-  var frontier : vertexset{Vertex} = vertices.filter(ndFilter);
+  var iter : int = atoi(argv[2]);
 
-  while (frontier.getVertexSetSize() != 0)
-    var output : vertexset{Vertex};
-    #s1# output = edges.from(frontier).to(toFilter).applyModified(updateEdge, parent, true);
+  for i in 0:iter
+    startTimer();
+
+    read_nd_nodes(argv[1]);
+    var frontier : vertexset{Vertex} = vertices.filter(ndFilter);
+
+    while (frontier.getVertexSetSize() != 0)
+      var output : vertexset{Vertex};
+      #s1# output = edges.from(frontier).to(toFilter).applyModified(updateFlag, nondeterministic, true);
+      delete frontier;
+      frontier = output;
+    end
     delete frontier;
-    frontier = output;
+
+    var time : float = stopTimer() * 1000;
+    print time;
   end
-  delete frontier;
-    
-  #s2# vertices.apply(printParent);
+
+  % vertices.apply(printNondeterminism);
 end

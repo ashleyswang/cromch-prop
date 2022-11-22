@@ -9,6 +9,7 @@
 
 IFTGraph read_graph(std::string graph) {
 	IFTGraph G;
+	G.graph = graph;
 
 	/* Parse nodes */
 	std::ifstream ifs;
@@ -100,7 +101,7 @@ int main (int argc, char *argv[]) {
 	std::string propagate_method = argv[2];
 	if (propagate_method == "iter") propagate = new IterativePropagate();
 	if (propagate_method == "multi") propagate = new MultithreadPropagate();
-	if (propagate_method == "bfs") propagate = new GraphBlasBFS();
+	if (propagate_method == "gt") propagate = new GraphItPropagate();
 
 	// Create graph object
 	IFTGraph graph = read_graph(argv[1]);
@@ -108,7 +109,7 @@ int main (int argc, char *argv[]) {
 	// Propagation
 	for (int i = 0; i < num_iter; ++i) {
 		IFTGraph G = graph;
-		// IFTGraph G = read_graph(argv[1]);
+		propagate->setup(graph);
 		auto start = std::chrono::high_resolution_clock::now();
 		propagate->propagate_flags(G);
 		auto stop = std::chrono::high_resolution_clock::now();

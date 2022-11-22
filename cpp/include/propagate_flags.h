@@ -6,6 +6,7 @@
 class PropagateFlags {
   public:
     virtual ~PropagateFlags() {};
+    virtual void setup(IFTGraph& G) {};
     virtual void propagate_flags(IFTGraph& G) = 0;
 };
 
@@ -19,9 +20,13 @@ class MultithreadPropagate : public PropagateFlags {
     void propagate_flags(IFTGraph& G);
 };
 
-class GraphBlasBFS : public PropagateFlags {
+class GraphItPropagate : public PropagateFlags {
   public: 
+    void setup(IFTGraph& G);
     void propagate_flags(IFTGraph& G);
+
+  private:
+    // stuff
 };
 
 #endif  // PROPAGATE_FLAGS_H

@@ -8,7 +8,7 @@ EXE := propagate_flags
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-CXXFLAGS := --std=c++11 -Iinclude -I/usr/local/include -MMD -MP
+CXXFLAGS := --std=c++14 -Iinclude -I/usr/local/include -I../graphit/graphit/src/runtime_lib/ -MMD -MP
 CFLAGS   := -Wall
 LDFLAGS  := -Llib
 LDLIBS   := -lm -lpthread
