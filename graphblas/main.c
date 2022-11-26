@@ -2,29 +2,43 @@
 #include "LAGraph.h"
 #include "LAGraphX.h"
 
+#include <time.h>
+
 #include "gb_utils.h"
-
-//   // do BFS and output all visited nodes
-//   GrB_Vector vector;
-//   // gotta do this for all the non deterministic nodes, idk seems kinda like a lot of work but i suppose you could multithread each bfs call, but then is it really worth it to use graphblas? idk sober ashley
-//   // you figure it out <3 -high ashley
-//   // wait but also to check for the actual node, you can just check the index in the output vector
-//   // i think it'll have a -1 or null if it is never reached
-//   LAGr_BreadthFirstSearch(nullptr, &vector, graph, index, msg);
-
-//   // then you get the indices and then you iterate through the node list
-//   // get the node pointer from the index and then make it non deterministic if it is not already nondeterministic
-// }
-
-// #undef NUM_NODES
 
 int main(int argc, char** argv) {
   if (argc < 3) {
-    fprintf(stderr, "USAGE: ./main <benchmark_name> <num_nodes>");
+    fprintf(stderr, "USAGE: ./main <benchmark_name> <num_iterations> <output_file>");
     return 1;
   }
+  int num_iterations = atoi(argv[2]);
+  FILE* fp = (argc == 4) ? fopen(argv[3], "w") : stdout;
+
+  GrB_init(GrB_NONBLOCKING);
 
   struct Graph G;
-  G.num_nodes = atoi(argv[2]);
   read_graph(argv[1], &G);
+
+  bool nondeterministic[G.num_nodes];
+  for (int i = 0; i < num_iterations; i++) {  
+    for (size_t i = 0; i < G.num_nodes; i++) {
+      nondeterministic[i] = false;
+    }
+    clock_t start = clock();
+    bfs(&G, nondeterministic);
+    // bfs_mod(&G, nondeterministic);
+    clock_t end = clock();
+    double cpu_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("%f\n", cpu_time * 1000);
+  }
+  
+  GrB_finalize();
+  free(G.nd_nodes);
+
+  // for (size_t i = 0; i < G.num_nodes; i++) {
+  //   if (nondeterministic[i]) fprintf(fp, "%d\n", i);
+  // }
+  if (argc == 4) fclose(fp);
+  
+  return 0;
 }

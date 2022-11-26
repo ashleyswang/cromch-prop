@@ -15,9 +15,9 @@ def read_graph(benchmark):
                                     node_str, 
                                     bool(int(nondeterministic))))
 
-  edge_data = open(f"../benchmarks/{benchmark}/edges.txt", 'r').readlines()
+  edge_data = open(f"../benchmarks/{benchmark}/edges.el", 'r').readlines()
   for line in edge_data:
-    src, dst = [int(i) for i in line.split(',')]
+    src, dst = [int(i) for i in line.split(' ')]
     G.edges.append(IFTGraph.IFTEdge(src, dst))
 
   return G

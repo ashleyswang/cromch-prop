@@ -1,1 +1,1 @@
-gcc -I/usr/local/include main.c gb_utils.c -lgraphblas -llagraph -llagraphx -o main
+gcc -I/usr/local/include main.c gb_utils.c gb_bfs.c -lgraphblas -llagraph -llagraphx -lpthread -lm -o main
