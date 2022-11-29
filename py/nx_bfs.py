@@ -29,5 +29,5 @@ def bfs_edges(G, sources, reverse=False, depth_limit=None, sort_neighbors=None):
         successors = G.neighbors
     yield from generic_bfs_edges(G, sources, successors, depth_limit, sort_neighbors)
 
-def bfs_multi(G : IFTGraph, sources: list[int]):
+def bfs_multi(G, sources):
     return [x[1] for x in list(bfs_edges(G, sources))]

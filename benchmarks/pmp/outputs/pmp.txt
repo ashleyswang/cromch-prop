@@ -1,7 +1,3 @@
-
-analysis features: serial graph graph_analysis
- included data types: Standard
-nodes: 6033, edges: 15711
 #1139576 X1=$80002974 0
 #1139576 PC=$80002970 1
 #1139576 i=$fffffffffffffdb6 0
