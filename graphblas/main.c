@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
       nondeterministic[i] = false;
     }
     clock_t start = clock();
-    bfs(&G, nondeterministic);
-    // bfs_mod(&G, nondeterministic);
+    // bfs(&G, nondeterministic);
+    bfs_mod(&G, nondeterministic);
     clock_t end = clock();
     double cpu_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("%f\n", cpu_time * 1000);

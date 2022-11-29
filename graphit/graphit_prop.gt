@@ -1,0 +1,50 @@
+extern func edge_fname(graph_name : string) -> output:string;
+extern func read_nd_nodes(graph_name : string);
+
+element Vertex end
+element Edge end
+
+const edges : edgeset{Edge}(Vertex,Vertex) = load(edge_fname(argv[1]));
+const vertices : vertexset{Vertex} = edges.getVertices();
+const nondeterministic : vector{Vertex}(bool) = false;
+
+% filters nodes that are nondeterministic
+func ndFilter(v : Vertex) -> output : bool
+  output = nondeterministic[v];
+end
+
+% updates node to be nondeterministic
+func updateFlag(src : Vertex, dst : Vertex)
+  nondeterministic[dst] = true;
+end
+
+% filters nodes that are not nondeterministic
+func toFilter(v : Vertex) -> output : bool
+  output = not nondeterministic[v];
+end
+
+func printNondeterminism(v : Vertex)
+  if nondeterministic[v]
+    print v;
+  end 
+end
+
+func main()
+  startTimer();
+
+  read_nd_nodes(argv[1]);
+  var frontier : vertexset{Vertex} = vertices.filter(ndFilter);
+
+  while (frontier.getVertexSetSize() != 0)
+    var output : vertexset{Vertex};
+    #s1# output = edges.from(frontier).to(toFilter).applyModified(updateFlag, nondeterministic, true);
+    delete frontier;
+    frontier = output;
+  end
+  delete frontier;
+
+  var time : float = stopTimer() * 1000;
+  print time;
+
+  % vertices.apply(printNondeterminism);
+end
