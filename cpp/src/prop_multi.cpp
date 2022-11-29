@@ -5,6 +5,7 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <iostream>
 
 #define NUM_THREADS 10
 
@@ -42,11 +43,13 @@ void MultithreadPropagate::propagate_flags(IFTGraph& G) {
 
   auto increment = ceil(float(nd_nodes.size()) / NUM_THREADS);
   auto start = nd_nodes.begin(), end = nd_nodes.begin() + increment - 1;
+  auto nd_nodes_end = nd_nodes.end();
 
   // std::mutex m;
   std::vector<std::thread> threads;
   for (size_t i = 0; i < NUM_THREADS; i++) {
-    if (i == NUM_THREADS - 1) end = nd_nodes.end();
+    if (start > nd_nodes_end) break;
+    if (end > nd_nodes_end) end = nd_nodes.end();
     std::deque<int> prop_nodes(start, end);
     threads.emplace_back(std::thread(update_flag, std::ref(G), prop_nodes));
     start += increment;
