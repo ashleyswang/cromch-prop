@@ -51,7 +51,7 @@ def propagate_flags(G):
   nx_graph = to_nxgraph(G)
   nd_nodes = G.get_nondeterministic_nodes()
 
-  prop_nodes = bfs_multi(nx_graph, nd_nodes)
+  prop_nodes = dfs_multi(nx_graph, nd_nodes)
   for nidx in prop_nodes:
     G.nodes[nidx].nondeterministic = True
 
