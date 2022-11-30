@@ -1,0 +1,1 @@
+python3 graph_csv.py ../benchmarks/$1/outputs/$1.txt ../benchmarks/$1

@@ -3,6 +3,7 @@ import networkx as nx
 import timeit
 from ift import IFTGraph
 from nx_bfs import bfs_multi
+from nx_dfs import dfs_multi
 
 def read_graph(benchmark):
   G = IFTGraph()

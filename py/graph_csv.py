@@ -9,6 +9,7 @@ def read_graph(input_file, output_path):
   nd_node_out = open(f"{output_path}/nd_nodes.txt", "w")
 
   node_id = 0
+  num_nd = 0
   node_dict = {}
   for node in nodes: 
     commit_id, node_str, nondeterministc = node
@@ -18,7 +19,9 @@ def read_graph(input_file, output_path):
     if (key not in node_dict): 
       node_dict[key] = node_id
       node_out.write(f"{node_id},{commit_id},{node_str},{nondeterministc}\n")
-      if (int(nondeterministc)): nd_node_out.write(f"{node_id}\n")
+      if (int(nondeterministc)): 
+        num_nd += 1
+        nd_node_out.write(f"{node_id}\n")
       node_id += 1
   node_out.close()
   nd_node_out.close()
@@ -39,6 +42,12 @@ def read_graph(input_file, output_path):
   for edge in edge_arr:
     edge_out.write(f"{edge[0]} {edge[1]}\n")
   edge_out.close()
+
+  num_nodes = node_id
+  num_edges = len(edge_arr)
+  info_out = open(f"{output_path}/info.txt", "w")
+  info_out.write(f"{num_nodes} {num_edges} {num_nd}")
+  info_out.close()
 
 if __name__ == "__main__":
   if (len(sys.argv) < 3):

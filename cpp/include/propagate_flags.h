@@ -15,7 +15,17 @@ class IterativePropagate : public PropagateFlags {
     void propagate_flags(IFTGraph& G);
 };
 
+class RecursivePropagate : public PropagateFlags {
+  public: 
+    void propagate_flags(IFTGraph& G);
+};
+
 class MultithreadPropagate : public PropagateFlags {
+  public: 
+    void propagate_flags(IFTGraph& G);
+};
+
+class MultiRecurPropagate : public PropagateFlags {
   public: 
     void propagate_flags(IFTGraph& G);
 };

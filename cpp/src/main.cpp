@@ -98,8 +98,10 @@ int main (int argc, char *argv[]) {
 	// Choose propagate method
 	std::string propagate_method = argv[2];
 	if (propagate_method == "iter") propagate = new IterativePropagate();
+	if (propagate_method == "recur") propagate = new RecursivePropagate();
 	if (propagate_method == "multi") propagate = new MultithreadPropagate();
-	if (propagate_method == "gt") propagate = new GraphItPropagate();
+	if (propagate_method == "multir") propagate = new MultiRecurPropagate();
+	// if (propagate_method == "gt") propagate = new GraphItPropagate();
 
 	int num_iter = 0;
 	bool make_graph = false; 
