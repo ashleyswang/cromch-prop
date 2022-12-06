@@ -4,9 +4,10 @@
 
 bool read_graph(char* graph_name, struct Graph* G) {
   // initialize graph struct
-  char info[50] = "../benchmarks/";
-  strcat(info, graph_name);
-  strcat(info, "/info.txt");
+  // char info[50] = "../benchmarks/";
+  // strcat(info, graph_name);
+  // strcat(info, "/info.txt");
+  char info[] = "../benchmarks/qsort/info.txt";
   FILE *fp = fopen(info, "r");
 
   int num_nodes, num_edges, num_nd;
@@ -18,9 +19,11 @@ bool read_graph(char* graph_name, struct Graph* G) {
   G->num_nd = num_nd;
 
   // initialize nd_nodes array  
-  char nd_nodes[50] = "../benchmarks/";
+  // char nd_nodes[50] = "../benchmarks/";
+  // strcat(nd_nodes, graph_name);
+  // strcat(nd_nodes, "/nd_nodes.txt");
+  char nd_nodes[50] = "../cpp2/qsort-nd/nd_nodes/";
   strcat(nd_nodes, graph_name);
-  strcat(nd_nodes, "/nd_nodes.txt");
   fp = fopen(nd_nodes, "r");
 
   G->nd_nodes = (GrB_Index*) malloc(sizeof(GrB_Index) * num_nd);
@@ -33,9 +36,10 @@ bool read_graph(char* graph_name, struct Graph* G) {
   fclose(fp);
 
   // create adjacency matrix
-  char edges[50] = "../benchmarks/";
-  strcat(edges, graph_name);
-  strcat(edges, "/edges.el");
+  // char edges[50] = "../benchmarks/";
+  // strcat(edges, graph_name);
+  // strcat(edges, "/edges.el");
+  char edges[] = "../benchmarks/qsort/edges.el";
   fp = fopen(edges, "r");
 
   GrB_Matrix_new(&G->adjacency_matrix, GrB_BOOL, G->num_nodes, G->num_nodes);

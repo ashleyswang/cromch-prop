@@ -47,25 +47,27 @@ def to_nxgraph(ift_graph):
   G.add_edges_from([(e.src, e.dst) for e in ift_graph.edges])
   return G
 
-def propagate_flags(G): 
+def propagate_flags(G, traversal): 
   nx_graph = to_nxgraph(G)
   nd_nodes = G.get_nondeterministic_nodes()
 
-  prop_nodes = dfs_multi(nx_graph, nd_nodes)
+  prop_nodes = traversal(nx_graph, nd_nodes)
   for nidx in prop_nodes:
     G.nodes[nidx].nondeterministic = True
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--graph", default="vsra")
-  # parser.add_argument("--method", default="bfs_mod")
+  parser.add_argument("--method", default="bfs")
   parser.add_argument("--iter", default=1, type=int)
   parser.add_argument("--output", default=False)
   args = parser.parse_args()
 
+  traversal = dfs_multi if (args.method == "dfs") else bfs_multi
+    
   if (args.output):
     G = read_graph(args.graph)
-    propagate_flags(G)
+    propagate_flags(G, traversal)
     # output_graph(G, args.graph)
     for node in G.nodes:
       if node.nondeterministic:
@@ -73,5 +75,5 @@ if __name__ == "__main__":
   else: 
     for _ in range(args.iter):
       G = read_graph(args.graph)
-      t = timeit.timeit(lambda: propagate_flags(G), number=1)
+      t = timeit.timeit(lambda: propagate_flags(G, traversal), number=1)
       print(t*1000)

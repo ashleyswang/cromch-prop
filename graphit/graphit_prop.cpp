@@ -109,13 +109,12 @@ void operator() (NodeID v)
 };
 int main(int argc, char * argv[])
 {
-  edges = builtin_loadEdgesFromFile ( edge_fname(argv_safe((1) , argv, argc)) ) ;
+  edges = builtin_loadEdgesFromFile ( "../benchmarks/qsort/edges.el") ;
   nondeterministic = new bool [ builtin_getVertices(edges) ];
   ligra::parallel_for_lambda((int)0, (int)builtin_getVertices(edges) , [&] (int vertexsetapply_iter) {
     nondeterministic_generated_vector_op_apply_func_0()(vertexsetapply_iter);
   });;
   startTimer() ;
-  read_nd_nodes(argv_safe((1) , argv, argc)) ;
   VertexSubset<int> *  frontier = builtin_const_vertexset_filter <ndFilter>(ndFilter(), builtin_getVertices(edges) );
   while ( (builtin_getVertexSetSize(frontier) ) != ((0) ))
   {

@@ -1,7 +1,9 @@
 ITERS=$1
 
 # for BENCHMARK in "mt-matmul" "mt-vvadd" "padd" "pmp" "qsort" "vsra"
-for BENCHMARK in "median" "multiply" "spmv" "towers"
+# for BENCHMARK in "median" "multiply" "spmv" "towers"
+# for BENCHMARK in "mm" "vvadd"
+for BENCHMARK in "dhrystone"
 do
   python3 nx_propagate.py --iter $ITERS --graph $BENCHMARK > ${BENCHMARK}.times
 done

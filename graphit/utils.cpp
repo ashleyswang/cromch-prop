@@ -11,7 +11,8 @@ extern bool * nondeterministic;
 
 void read_nd_nodes(std::string graph_name) {
   std::ifstream ifs;
-	ifs.open("../benchmarks/" + graph_name + "/nd_nodes.txt");
+	// ifs.open("../benchmarks/" + graph_name + "/nd_nodes.txt");
+	ifs.open("../cpp2/qsort-nd/nd_nodes/" + graph_name + ".txt");
 
   std::string line;
 	while(!ifs.eof()) {

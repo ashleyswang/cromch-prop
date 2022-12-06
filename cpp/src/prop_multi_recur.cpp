@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream>
 
-#define NUM_THREADS 8
+#define NUM_THREADS 6
 
 namespace {
   std::vector<int> get_nondeterministic_nodes(const IFTGraph& G) {
