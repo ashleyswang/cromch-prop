@@ -58,20 +58,29 @@ def propagate_flags(G):
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--graph", default="vsra")
-  # parser.add_argument("--method", default="bfs_mod")
+  parser.add_argument("--method", default="bfs")
   parser.add_argument("--iter", default=1, type=int)
-  parser.add_argument("--output", default=False)
+  parser.add_argument("--graph", default=False, type=bool)
+  parser.add_argument("--ndout", default=False, type=bool)
   args = parser.parse_args()
 
-  if (args.output):
+  traversal = dfs_multi if (args.method == "dfs") else bfs_multi
+
+  if (args.graph):
     G = read_graph(args.graph)
     propagate_flags(G)
-    # output_graph(G, args.graph)
+    output_graph(G, args.graph)
+
+  if (args.ndout):
+    G = read_graph(args.graph)
+    propagate_flags(G)
+    ofs = open(f"{args.graph}_nd_out.txt", 'w')
     for node in G.nodes:
       if node.nondeterministic:
-        print(node.idx)
-  else: 
-    for _ in range(args.iter):
-      G = read_graph(args.graph)
-      t = timeit.timeit(lambda: propagate_flags(G), number=1)
-      print(t*1000)
+        ofs.write(f"{node.idx}\n")
+    ofs.close()
+    
+  for _ in range(args.iter):
+    G = read_graph(args.graph)
+    t = timeit.timeit(lambda: propagate_flags(G), number=1)
+    print(t*1000)
