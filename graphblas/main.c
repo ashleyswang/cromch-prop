@@ -35,10 +35,11 @@ int main(int argc, char** argv) {
   GrB_finalize();
   free(G.nd_nodes);
 
-  // for (size_t i = 0; i < G.num_nodes; i++) {
-  //   if (nondeterministic[i]) fprintf(fp, "%d\n", i);
-  // }
-  if (argc == 4) fclose(fp);
-  
+  if (argc == 4) {
+    for (size_t i = 0; i < G.num_nodes; i++) {
+      if (nondeterministic[i]) fprintf(fp, "%d\n", i);
+    }
+    fclose(fp);
+  }
   return 0;
 }
