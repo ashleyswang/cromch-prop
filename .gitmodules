@@ -1,0 +1,3 @@
+[submodule "graphit/graphit"]
+	path = graphit/graphit
+	url = https://github.com/GraphIt-DSL/graphit
